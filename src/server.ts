@@ -1,19 +1,18 @@
 import express, { Request, Response } from 'express';
 import { exec } from 'child_process';
-
+import cors from 'cors';
 
 const app = express();
-const port = 3000; // El puerto en el que tu API escuchará
+const port = 3000; 
 
-// Middleware para parsear JSON
 app.use(express.json());
 
-// Endpoint para ejecutar Bandage info
-app.get('/api/bandage/info', (req: any, res: any) => {
-  // La ruta completa al archivo montado
-  const filePath = '/app/data/test.gfa';  // Ruta dentro del contenedor
+app.use(cors({
+  origin: '*', 
+}));
 
-  // Comando para ejecutar Bandage
+app.get('/api/bandage/info', (req: any, res: any) => {
+  const filePath = '/app/data/test.gfa';  
   const command = `BandageNG info ${filePath}`;
 
   exec(command, (err, stdout, stderr) => {
@@ -22,17 +21,15 @@ app.get('/api/bandage/info', (req: any, res: any) => {
       return res.status(500).send('Error ejecutando Bandage');
     }
     console.log('Bandage output:', stdout);
-    res.json({ output: stdout });
+    res.json({ stdout });
   });
 });
-
 
 app.get('/', (req: Request, res: Response) => {
   res.send('¡Hola desde la API de Bandage!');
 }); 
 
 
-// Iniciar el servidor
 app.listen(port, () => {
   console.log(`Bandage API escuchando en el puerto ${port}`);
 });

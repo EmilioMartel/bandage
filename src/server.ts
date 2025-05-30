@@ -70,7 +70,7 @@ app.get("/api/bandage/layout", async (req: Request, res: Response): Promise<any>
         console.error("Error BandageNG:", stderr || err.message);
         return res.status(500).json({ error: stderr || err.message });
       }
-      res.json({
+      res.status(200).json({
         message: `Layout generado en 'files/${outputName}'`,
         stdout: stdout.trim()
       });

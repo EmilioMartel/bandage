@@ -9,6 +9,9 @@ RUN npm run build
 # Etapa 2: build + ejecución usando Debian Bookworm
 FROM node:22-bookworm-slim
 
+# Argumento para detectar arquitectura durante el build
+ARG TARGETARCH
+
 # Instalar dependencias básicas y herramientas
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
@@ -26,12 +29,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl && \
     rm -rf /var/lib/apt/lists/*
 
-# Instalar CMake >= 3.28 manualmente
+# Instalar CMake >= 3.28 manualmente, eligiendo el binario correcto según TARGETARCH
 WORKDIR /tmp
-RUN curl -LO https://github.com/Kitware/CMake/releases/download/v3.28.3/cmake-3.28.3-linux-x86_64.sh && \
-    chmod +x cmake-3.28.3-linux-x86_64.sh && \
-    ./cmake-3.28.3-linux-x86_64.sh --skip-license --prefix=/usr/local && \
-    rm cmake-3.28.3-linux-x86_64.sh
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+      CMK_URL="https://github.com/Kitware/CMake/releases/download/v3.28.3/cmake-3.28.3-linux-x86_64.sh"; \
+    else \
+      CMK_URL="https://github.com/Kitware/CMake/releases/download/v3.28.3/cmake-3.28.3-linux-aarch64.sh"; \
+    fi && \
+    curl -LO ${CMK_URL} && \
+    chmod +x cmake-3.28.3-linux-*.sh && \
+    ./cmake-3.28.3-linux-*.sh --skip-license --prefix=/usr/local && \
+    rm cmake-3.28.3-linux-*.sh
 
 # Clonar y compilar BandageNG
 WORKDIR /opt

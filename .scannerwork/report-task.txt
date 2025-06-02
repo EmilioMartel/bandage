@@ -1,0 +1,6 @@
+projectKey=bandage-api
+serverUrl=http://localhost:9000
+serverVersion=25.5.0.107428
+dashboardUrl=http://localhost:9000/dashboard?id=bandage-api
+ceTaskId=c7311024-ce90-444f-a23e-ba833bdd869a
+ceTaskUrl=http://localhost:9000/api/ce/task?id=c7311024-ce90-444f-a23e-ba833bdd869a

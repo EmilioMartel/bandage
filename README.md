@@ -71,10 +71,9 @@ npm run start
 
 ## **🔧 Docker**
 
-### **Construcción y ejecución del contenedor**
+### **Construcción**
 ```bash
-docker build -t bandage-api .
-docker run -p 3000:3000 bandage-api
+docker build -t emmartel/bandage-api .
 ```
 
 O con `docker-compose`:
